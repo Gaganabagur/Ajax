@@ -1,0 +1,94 @@
+<html>
+<style>
+table,th,td {
+  border : 3px solid green;
+  border-collapse: collapse;
+}
+
+th,td {
+  padding: 5px;
+}
+
+.decoration
+{
+width:500px;
+height:50px;
+background-color:black;
+color:white;
+}
+
+</style>
+<body>
+
+<h2>Choose a country name to find out it's capital</h2>
+<div id="demo">
+<select id="mySelect">
+
+<option value="" disabled selected>Choose a country</option><br><br>
+
+</select>
+<div id ="capital"></div>
+<p id="population"></p>
+<p id="borders"></p>
+
+<button type="submit" onclick="displayCapital()"> Submit </button>
+<table id="demotable" class="decoration"></table>
+</div>
+<script>  
+
+function LoadDoc()
+{
+var xhttp=new XMLHttpRequest();
+xhttp.open("GET","https://restcountries.eu/rest/v2/all",true);
+xhttp.send();
+
+xhttp.onload = function() {
+if(this.status==200)
+{
+var response=JSON.parse(this.responseText);
+
+for(var i=0; i<response.length ;i++)
+{
+var data=response[i].name;
+if(count!= 0)
+{
+var select1=document.getElementById('mySelect');
+var strUser=select1.options[select1.selectedIndex].value;
+if(strUser==response[i].name)
+{
+
+var capital=response[i].capital;
+var population=response[i].population;
+var borders=response[i].borders;
+var region=response[i].region;
+var subregion=response[i].subregion;
+var timezones=response[i].timezones;
+ 
+ var table="<tr><th>capital</th><th>population</th><th>borders</th><th>region</th><th>subregion</th><th>timezones</th></tr>";
+ table += "<tr><td>" + capital +"</td><td>" +population+"</td><td>" + borders + "</td><td>" + region + "</td><td>" +subregion+"</td><td>"+timezones+"</td></tr>";
+
+  
+  document.getElementById("demotable").innerHTML=table;
+}
+}
+else
+{
+var select=document.getElementById("mySelect");
+var option=document.createElement("option");
+option.appendChild(document.createTextNode(data));
+option.value=data;
+select.appendChild(option);
+}}}};}
+
+var count = 0;
+
+function displayCapital()
+{
+count++;
+LoadDoc();
+}
+LoadDoc();
+
+</script>
+</body>
+</html>
